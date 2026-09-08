@@ -571,7 +571,7 @@ export function formatNumber(n: number): string {
 // WORKFLOW PIPELINE BANNER
 // ─────────────────────────────────────────────
 interface WorkflowPipelineBannerProps {
-  currentStep: 1 | 2 | 3 | 4 | 5;
+  currentStep: number;
 }
 
 export function WorkflowPipelineBanner({ currentStep }: WorkflowPipelineBannerProps) {

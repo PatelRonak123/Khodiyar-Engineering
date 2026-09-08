@@ -173,16 +173,19 @@ export interface Supplier {
   supplierCode: string;
   companyName: string;
   contactPerson: string;
-  mobile: string;
+  mobile?: string;
+  phone?: string;
+  category?: string;
   email: string;
   gstNumber?: string;
   address: Address;
-  materialsSupplied: string[];
+  materialsSupplied?: string[];
   paymentTerms: string;
   rating: number; // 1-5
   lastPurchaseDate?: string;
-  outstandingAmount: number;
+  outstandingAmount?: number;
   status: 'Active' | 'Inactive' | 'Blacklisted';
+  createdAt?: string;
 }
 
 // ── Product ──────────────────────────────────────────────────
@@ -266,9 +269,9 @@ export type JobStatus = 'Active' | 'On Hold' | 'Completed' | 'Cancelled';
 export interface Job {
   id: string;
   jobNumber: string;
-  inquiryId: string;
+  inquiryId?: string;
   customerId: string;
-  productId: string;
+  productId?: string;
   productName: string;
   quantity: number;
   currentStage: JobStage;
@@ -279,22 +282,22 @@ export interface Job {
   bomId?: string;
   quotationId?: string;
   productionOrderId?: string;
-  fabricationOrderIds: string[];
+  fabricationOrderIds?: string[];
   assemblyOrderId?: string;
   qcInspectionId?: string;
   dispatchOrderId?: string;
-  configuration: Record<string, string | number>;
-  plannedStartDate: string;
-  plannedEndDate: string;
+  configuration?: Record<string, string | number>;
+  plannedStartDate?: string;
+  plannedEndDate?: string;
   actualStartDate?: string;
   actualEndDate?: string;
   assignedManager?: string;
   progressPercent: number;
-  estimatedValue: number;
+  estimatedValue?: number;
   actualValue?: number;
   notes?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 // ── Design ───────────────────────────────────────────────────
@@ -343,7 +346,7 @@ export interface BOMItem {
   lineNo: number;
   itemCode: string;
   itemName: string;
-  material: string;
+  material?: string;
   specification: string;
   quantity: number;
   unit: string;
@@ -361,7 +364,8 @@ export interface BOM {
   id: string;
   bomNumber: string;
   jobId: string;
-  productId: string;
+  designId?: string;
+  productId?: string;
   revision: string;
   quantity: number;
   preparedBy: string;
@@ -397,23 +401,23 @@ export interface Quotation {
   customerId: string;
   inquiryId: string;
   jobId?: string;
-  productId: string;
-  configuration: Record<string, string | number>;
+  productId?: string;
+  configuration?: Record<string, string | number>;
   lineItems: QuotationLineItem[];
   subtotal: number;
-  discountAmount: number;
-  discountPercent: number;
-  freightCharges: number;
-  installationCharges: number;
-  otherCharges: number;
-  taxableAmount: number;
-  gstPercent: number;
-  gstAmount: number;
+  discountAmount?: number;
+  discountPercent?: number;
+  freightCharges?: number;
+  installationCharges?: number;
+  otherCharges?: number;
+  taxableAmount?: number;
+  gstPercent?: number;
+  gstAmount?: number;
   totalAmount: number;
-  paymentTerms: string;
-  deliveryWeeks: number;
-  warrantyMonths: number;
-  validityDays: number;
+  paymentTerms?: string;
+  deliveryWeeks?: number;
+  warrantyMonths?: number;
+  validityDays?: number;
   status: QuotationStatus;
   notes?: string;
   termsConditions?: string;
@@ -424,7 +428,7 @@ export interface Quotation {
 
 // ── Sales Order ──────────────────────────────────────────────
 export type SalesOrderStatus =
-  | 'Confirmed' | 'Production Initiated' | 'In Production'
+  | 'Confirmed' | 'Production Initiated' | 'In Production' | 'In Progress'
   | 'QC Pending' | 'Ready for Dispatch' | 'Dispatched' | 'Closed';
 
 export interface SalesOrder {
@@ -432,15 +436,16 @@ export interface SalesOrder {
   poNumber: string;
   poDate: string;
   customerId: string;
-  quotationId: string;
+  quotationId?: string;
   jobId?: string;
-  productId: string;
+  productId?: string;
+  productName?: string;
   quantity: number;
-  configuration: Record<string, string | number>;
+  configuration?: Record<string, string | number>;
   deliveryDate: string;
   paymentTerms: string;
-  shippingAddress: Address;
-  billingAddress: Address;
+  shippingAddress?: Address;
+  billingAddress?: Address;
   customerPoAttachment?: string;
   specialInstructions?: string;
   status: SalesOrderStatus;
@@ -452,7 +457,7 @@ export interface SalesOrder {
 
 // ── Purchase ─────────────────────────────────────────────────
 export type PRStatus =
-  | 'Draft' | 'Submitted' | 'Approved' | 'RFQ Sent'
+  | 'Draft' | 'Submitted' | 'Approved' | 'Pending Approval' | 'Ordered' | 'RFQ Sent'
   | 'PO Created' | 'Partial Receipt' | 'Completed' | 'Cancelled';
 
 export interface PurchaseRequestItem {
@@ -478,12 +483,13 @@ export interface PurchaseRequest {
   priority: Priority;
   notes?: string;
   createdAt: string;
+  updatedAt?: string;
   approvedBy?: string;
   approvedAt?: string;
 }
 
 export type POStatus =
-  | 'Draft' | 'Sent' | 'Acknowledged' | 'Partial Receipt'
+  | 'Draft' | 'Issued' | 'Sent' | 'Acknowledged' | 'Partial Receipt'
   | 'Fully Received' | 'Cancelled';
 
 export interface POItem {
@@ -493,30 +499,35 @@ export interface POItem {
   specification: string;
   quantity: number;
   unit: string;
-  rate: number;
-  gstPercent: number;
-  total: number;
-  receivedQuantity: number;
+  rate?: number;
+  unitPrice?: number;
+  totalPrice?: number;
+  gstPercent?: number;
+  total?: number;
+  receivedQuantity?: number;
+  pendingQuantity?: number;
 }
 
 export interface PurchaseOrder {
   id: string;
   poNumber: string;
-  poDate: string;
+  poDate?: string;
   supplierId: string;
   prId?: string;
   jobId?: string;
   items: POItem[];
   subtotal: number;
   gstAmount: number;
-  freightCharges: number;
+  freightCharges?: number;
   totalAmount: number;
   paymentTerms: string;
+  deliveryTerms?: string;
   deliveryDate: string;
-  deliveryAddress: Address;
+  deliveryAddress?: Address;
   status: POStatus;
   notes?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface MaterialReceipt {
@@ -546,11 +557,13 @@ export interface MaterialReceipt {
 export type ItemCategory =
   | 'Raw Material' | 'Components' | 'Fabricated Parts' | 'Finished Goods' | 'Consumables';
 
+export type InventoryCategory = ItemCategory;
+
 export type ItemSubCategory =
   | 'MS Sheet' | 'SS Sheet' | 'MS Angle' | 'MS Channel' | 'MS Pipe'
   | 'SS Pipe' | 'SS Shaft' | 'Bearings' | 'Gearbox' | 'Motors'
   | 'Couplings' | 'Chain' | 'Sprocket' | 'Fasteners' | 'Conveyor Frame'
-  | 'Support Bracket' | 'Hopper' | 'Chute' | 'Base Plate' | 'Other';
+  | 'Support Bracket' | 'Hopper' | 'Chute' | 'Base Plate' | 'Structural / Machinery Part' | 'Other';
 
 export interface InventoryItem {
   id: string;
@@ -565,7 +578,10 @@ export interface InventoryItem {
   reservedStock: number;
   availableStock: number;
   reorderLevel: number;
+  minStock?: number;
   maxStock?: number;
+  hsnCode?: string;
+  gstPercent?: number;
   warehouse: string;
   rack?: string;
   supplierId?: string;
@@ -573,6 +589,9 @@ export interface InventoryItem {
   lastPurchaseRate?: number;
   lastPurchaseDate?: string;
   notes?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface StockMovement {
@@ -621,6 +640,7 @@ export interface FabricationOrder {
   remarks?: string;
   completionPercent: number;
   createdAt: string;
+  updatedAt?: string;
 }
 
 // ── Production ───────────────────────────────────────────────
@@ -706,6 +726,7 @@ export type InspectionType = 'In-Process' | 'Final Inspection' | 'Customer Inspe
 export interface QCParameter {
   id: string;
   parameter: string;
+  standard?: string;
   expectedValue: string;
   actualValue: string;
   unit?: string;
@@ -718,7 +739,7 @@ export interface QCInspection {
   qcNumber: string;
   jobId: string;
   productionOrderId?: string;
-  productId: string;
+  productId?: string;
   inspector: string;
   inspectionDate: string;
   inspectionType: InspectionType;
@@ -731,6 +752,7 @@ export interface QCInspection {
   approvedBy?: string;
   approvedAt?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface ReworkOrder {
@@ -759,7 +781,7 @@ export interface DispatchOrder {
   salesOrderId?: string;
   qcInspectionId?: string;
   customerId: string;
-  productId: string;
+  productId?: string;
   quantity: number;
   packingDetails: string;
   transporter?: string;
@@ -772,7 +794,8 @@ export interface DispatchOrder {
   invoiceNumber?: string;
   status: DispatchStatus;
   deliveredDate?: string;
-  documents: {
+  updatedAt?: string;
+  documents?: {
     invoice?: string;
     eWayBill?: string;
     lr?: string;

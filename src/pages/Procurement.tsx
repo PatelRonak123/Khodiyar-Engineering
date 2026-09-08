@@ -439,8 +439,8 @@ export function PurchaseOrders() {
                       <tr key={i.id} className="border-b border-gray-50">
                         <td className="table-td font-medium">{i.itemName}</td>
                         <td className="table-td text-right font-bold">{i.quantity} {i.unit}</td>
-                        <td className="table-td text-right">{formatCurrency(i.unitPrice)}</td>
-                        <td className="table-td text-right font-bold text-gray-900">{formatCurrency(i.totalPrice)}</td>
+                        <td className="table-td text-right">{formatCurrency(i.unitPrice || 0)}</td>
+                        <td className="table-td text-right font-bold text-gray-900">{formatCurrency(i.totalPrice || 0)}</td>
                       </tr>
                     ))}
                   </tbody>

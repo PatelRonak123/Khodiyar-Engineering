@@ -153,7 +153,7 @@ function Job360({ jobId, onClose }: { jobId: string; onClose: () => void }) {
             <div className="space-y-5">
               <div className="grid grid-cols-4 gap-3">
                 {[
-                  { label: 'Job Value', value: formatCurrency(job.estimatedValue), bg: 'bg-blue-50', color: 'text-blue-700' },
+                  { label: 'Job Value', value: formatCurrency(job.estimatedValue || 0), bg: 'bg-blue-50', color: 'text-blue-700' },
                   { label: 'Current Stage', value: job.currentStage, bg: 'bg-amber-50', color: 'text-amber-700' },
                   { label: 'Quantity', value: `${job.quantity} Nos`, bg: 'bg-purple-50', color: 'text-purple-700' },
                   { label: 'Due Date', value: job.plannedEndDate, bg: 'bg-emerald-50', color: 'text-emerald-700' },
@@ -594,7 +594,7 @@ export function Jobs() {
                     <ProgressBar percent={job.progressPercent} size="sm" label />
                   </td>
                   <td className="table-td"><PriorityBadge priority={job.priority} /></td>
-                  <td className="table-td text-right font-bold text-gray-900">{formatCurrency(job.estimatedValue)}</td>
+                  <td className="table-td text-right font-bold text-gray-900">{formatCurrency(job.estimatedValue || 0)}</td>
                   <td className="table-td text-xs text-gray-500 font-medium">{job.plannedEndDate}</td>
                   <td className="table-td">
                     <button

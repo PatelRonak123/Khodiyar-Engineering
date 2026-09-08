@@ -84,10 +84,10 @@ function QuotationPrintPreview({ q }: { q: Quotation }) {
       <div className="flex justify-end mb-6">
         <div className="w-80 space-y-1.5 text-sm bg-gray-50 p-4 rounded-xl border border-gray-200">
           <div className="flex justify-between"><span className="text-gray-500">Subtotal:</span><span className="font-semibold">{formatCurrency(q.subtotal)}</span></div>
-          {q.discountAmount > 0 && <div className="flex justify-between text-emerald-600"><span>Special Discount:</span><span>- {formatCurrency(q.discountAmount)}</span></div>}
-          {q.freightCharges > 0 && <div className="flex justify-between"><span className="text-gray-500">Freight & Packaging:</span><span>{formatCurrency(q.freightCharges)}</span></div>}
-          <div className="flex justify-between border-t border-gray-200 pt-1.5"><span className="text-gray-600 font-semibold">Taxable Value:</span><span className="font-bold">{formatCurrency(q.taxableAmount)}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">GST ({q.gstPercent}%):</span><span className="font-semibold">{formatCurrency(q.gstAmount)}</span></div>
+          {(q.discountAmount || 0) > 0 && <div className="flex justify-between text-emerald-600"><span>Special Discount:</span><span>- {formatCurrency(q.discountAmount || 0)}</span></div>}
+          {(q.freightCharges || 0) > 0 && <div className="flex justify-between"><span className="text-gray-500">Freight & Packaging:</span><span>{formatCurrency(q.freightCharges || 0)}</span></div>}
+          <div className="flex justify-between border-t border-gray-200 pt-1.5"><span className="text-gray-600 font-semibold">Taxable Value:</span><span className="font-bold">{formatCurrency(q.taxableAmount || 0)}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">GST ({q.gstPercent}%):</span><span className="font-semibold">{formatCurrency(q.gstAmount || 0)}</span></div>
           <div className="flex justify-between text-base font-bold border-t-2 border-brand-600 pt-2 text-brand-700">
             <span>Grand Total (INR):</span><span>{formatCurrency(q.totalAmount)}</span>
           </div>
@@ -175,8 +175,8 @@ export function Quotations() {
       totalAmount: q.totalAmount,
       paidAmount: Math.round(q.totalAmount * 0.4),
       balanceAmount: Math.round(q.totalAmount * 0.6),
-      deliveryDate: new Date(Date.now() + 86400000 * 7 * q.deliveryWeeks).toISOString().split('T')[0],
-      paymentTerms: q.paymentTerms,
+      deliveryDate: new Date(Date.now() + 86400000 * 7 * (q.deliveryWeeks || 4)).toISOString().split('T')[0],
+      paymentTerms: q.paymentTerms || '40% Advance, 60% against dispatch',
       shippingAddress: customers.find(c => c.id === q.customerId)?.shippingAddress || {
         line1: 'GIDC Industrial Area', city: 'Vadodara', state: 'Gujarat', pincode: '390010', country: 'India'
       },
@@ -199,7 +199,7 @@ export function Quotations() {
       priority: 'High' as const,
       estimatedValue: q.totalAmount,
       plannedStartDate: new Date().toISOString().split('T')[0],
-      plannedEndDate: new Date(Date.now() + 86400000 * 7 * q.deliveryWeeks).toISOString().split('T')[0],
+      plannedEndDate: new Date(Date.now() + 86400000 * 7 * (q.deliveryWeeks || 4)).toISOString().split('T')[0],
       configuration: { category: 'Machinery' },
       createdAt: new Date().toISOString().split('T')[0],
     };

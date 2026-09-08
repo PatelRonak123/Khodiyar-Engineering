@@ -23,7 +23,7 @@ export function SalesOrders() {
   const [paymentTerms, setPaymentTerms] = useState('40% Advance, 60% against dispatch inspection');
 
   // Quotations awaiting customer PO
-  const pendingQuotations = quotations.filter(q => q.status === 'Sent' || q.status === 'Won' || !salesOrders.some(s => s.quotationId === q.id));
+  const pendingQuotations = quotations.filter(q => q.status === 'Sent' || q.status === 'Accepted' || !salesOrders.some(s => s.quotationId === q.id));
 
   const filtered = salesOrders.filter(o => {
     const cust = customers.find(c => c.id === o.customerId);
@@ -37,8 +37,8 @@ export function SalesOrders() {
     setProductName(q.lineItems[0]?.description || 'Industrial Machinery');
     setQuantity(q.lineItems[0]?.quantity || 1);
     setTotalAmount(q.totalAmount);
-    setDeliveryDate(new Date(Date.now() + 86400000 * 7 * q.deliveryWeeks).toISOString().split('T')[0]);
-    setPaymentTerms(q.paymentTerms);
+    setDeliveryDate(new Date(Date.now() + 86400000 * 7 * (q.deliveryWeeks || 4)).toISOString().split('T')[0]);
+    setPaymentTerms(q.paymentTerms || '40% Advance, 60% against dispatch inspection');
     setPoNumber(`PO-CUST-${String(Date.now()).slice(-4)}`);
     setAddOpen(true);
   };
@@ -238,7 +238,7 @@ export function SalesOrders() {
             <div>
               <p className="label mb-2">Delivery & Shipping Address</p>
               <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">
-                {selected.shippingAddress.line1}, {selected.shippingAddress.city} — {selected.shippingAddress.pincode}, {selected.shippingAddress.state}
+                {selected.shippingAddress ? `${selected.shippingAddress.line1}, ${selected.shippingAddress.city} — ${selected.shippingAddress.pincode}, ${selected.shippingAddress.state}` : 'N/A'}
               </p>
             </div>
 

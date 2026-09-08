@@ -46,7 +46,7 @@ export function BOMPage() {
       { id: 'bi-3', lineNo: 3, itemCode: 'COMP-MOT-001', itemName: 'Geared Motor 3HP 415V', specification: '3HP / 2.2kW, 50 RPM output', quantity: 1, unit: 'Nos', isAvailable: true, availableStock: 2, unitCost: 28000, totalCost: 28000 },
       { id: 'bi-4', lineNo: 4, itemCode: 'COMP-BLT-001', itemName: 'Nylon Conveyor Belt', specification: '650mm W x 3-ply x 5mm top/bottom', quantity: 25, unit: 'Mtr', isAvailable: false, availableStock: 0, unitCost: 1100, totalCost: 27500 },
     ];
-    const totalCost = defaultItems.reduce((acc, i) => acc + i.totalCost, 0);
+    const totalCost = defaultItems.reduce((acc, i) => acc + (i.totalCost || 0), 0);
 
     const newBOM: BOM = {
       id: `BOM-${Date.now()}`,
